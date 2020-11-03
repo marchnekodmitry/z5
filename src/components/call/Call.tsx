@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { format } from 'date-fns';
 
 import palette from '@/utils/styles/palette';
-import ButtonImage from '../common/ButtonImage';
-import SimpleTable from '../common/SimpleTable';
+import ButtonImage from '@/components/common/ButtonImage';
+import SimpleTable from '@/components/common/SimpleTable';
+import Button from '@/components/common/Button';
 
 interface Props {}
+
+const formatDate = (date: Date) => format(date, 'yyyy/MM/dd hh:mm a');
 
 const getSafeParam = (param?: string | number) => {
   if (param) return param;
@@ -83,8 +87,8 @@ const carRows: Array<{
 
 const selectedCar = {
   lp_num: 'dsaadas',
-  time: new Date().toISOString(),
-  exit_time: new Date().toISOString(),
+  time: formatDate(new Date()),
+  exit_time: formatDate(new Date()),
   channel: 1,
   duration: '0.00',
   parking_fee: 18,
@@ -94,26 +98,44 @@ const selectedCar = {
 const cars = [
   {
     lp_num: 'dsaadas',
-    time: new Date().toISOString(),
-    exit_time: new Date().toISOString(),
+    time: formatDate(new Date()),
+    exit_time: formatDate(new Date()),
     channel: 1,
     duration: '0.00',
     parking_fee: 18,
     exit_car_make: '-',
   },
   {
-    lp_num: 'dsaadas',
-    time: new Date().toISOString(),
-    exit_time: new Date().toISOString(),
+    lp_num: 'dsaaaaaadas',
+    time: formatDate(new Date()),
+    exit_time: formatDate(new Date()),
     channel: 1,
     duration: '0.00',
     parking_fee: 18,
     exit_car_make: '-',
   },
   {
-    lp_num: 'dsaadas',
-    time: new Date().toISOString(),
-    exit_time: new Date().toISOString(),
+    lp_num: '321312',
+    time: formatDate(new Date()),
+    exit_time: formatDate(new Date()),
+    channel: 1,
+    duration: '0.00',
+    parking_fee: 18,
+    exit_car_make: '-',
+  },
+  {
+    lp_num: 'jljlkjlk',
+    time: formatDate(new Date()),
+    exit_time: formatDate(new Date()),
+    channel: 1,
+    duration: '0.00',
+    parking_fee: 18,
+    exit_car_make: '-',
+  },
+  {
+    lp_num: 'iopiopipo',
+    time: formatDate(new Date()),
+    exit_time: formatDate(new Date()),
     channel: 1,
     duration: '0.00',
     parking_fee: 18,
@@ -136,15 +158,18 @@ const Call: React.FC<Props> = () => (
             <SelectedCarPlaceHolder width="255px" height="212px" />
             <SimpleTable rowsMap={selectedCarRows} item={selectedCar} />
           </SelectedCar>
-          <CarsList>
-            {cars.map((car) => (
-              <CarItem>
-                <CarPlaceholder width="157px" height="130px" />
-                <SimpleTable rowsMap={carRows} item={car} />
-              </CarItem>
-            ))}
-          </CarsList>
+          <CarsListWrapper>
+            <CarsList>
+              {cars.map((car) => (
+                <CarItem key={JSON.stringify(car)}>
+                  <CarPlaceholder width="157px" height="130px" />
+                  <SimpleTable rowsMap={carRows} item={car} />
+                </CarItem>
+              ))}
+            </CarsList>
+          </CarsListWrapper>
         </CarsContainer>
+        <SelectButton onClick={() => undefined}>Select</SelectButton>
       </CarsWrapper>
     </CallContainer>
     <OnCallInfo>
@@ -155,7 +180,6 @@ const Call: React.FC<Props> = () => (
 
 const CallWrapper = styled.div`
   width: 1350px;
-  height: 635px;
   padding: 36px 47px 51px 33px;
   border: 1px solid ${palette.grey};
   border-radius: 5px;
@@ -164,6 +188,8 @@ const CallWrapper = styled.div`
 
 const Title = styled.div`
   margin-bottom: 30px;
+  font-size: 14px;
+  line-height: 17px;
 `;
 
 const Placeholder = styled.div<{width: string; height: string}>`
@@ -181,7 +207,9 @@ const SelectedCarPlaceHolder = styled(Placeholder)`
   margin-bottom: 30px;
 `;
 
-const CarPlaceholder = styled(Placeholder)``;
+const CarPlaceholder = styled(Placeholder)`
+  margin-right: 15px;
+`;
 
 const CallContainer = styled.div`
   display: flex;
@@ -191,6 +219,17 @@ const CallWindow = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 90px;
+  position: relative;
+
+  &::after {
+    content: '';
+    width: 1px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -45px;
+    background-color:  #CCCCCC;
+  }
 `;
 
 const DropCallButton = styled(ButtonImage)`
@@ -198,27 +237,59 @@ const DropCallButton = styled(ButtonImage)`
 `;
 
 const CarsWrapper = styled.div`
-  
+  display: flex;
+  flex-direction: column;
 `;
 
 const CarsContainer = styled.div`
   display: flex;
+  height: 460px;
+`;
+
+const SelectButton = styled(Button)`
+  align-self: flex-end;
+  margin-top: 15px;
 `;
 
 const SelectedCar = styled.div`
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 35px;
 `;
 
-const CarsList = styled.ul`
-  max-height: 498px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
+const CarsListWrapper = styled.div`
+  max-height: 100%;
   overflow: auto;
 `;
 
+const CarsList = styled.ul`
+  padding: 0;
+  margin: 0;
+  list-style: none;
+`;
+
 const CarItem = styled.li`
-  
+  display: flex;
+  align-items: center;
+  padding-right: 40px;
+  position: relative;
+
+  &:not(:last-child) {
+    margin-bottom: 30px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    right: 30px;
+    left: -10px;
+    background: rgba(33, 206, 153, 0.15);
+    border: 2px solid ${palette.green};
+    border-radius: 5px;
+  }
 `;
 
 const OnCallInfo = styled.div`
